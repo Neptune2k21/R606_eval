@@ -11,6 +11,11 @@ class Database
         if (self::$instance === null) {
             require_once __DIR__ . '/../config.php';
 
+            /** @var string $dsn */
+            /** @var string $username */
+            /** @var string $password */
+            /** @var array<int, mixed> $options */
+
             try {
                 self::$instance = new PDO($dsn, $username, $password, $options);
             } catch (PDOException $e) {
@@ -22,29 +27,15 @@ class Database
         return self::$instance;
     }
 
-    public static function getOrCreateData(): array
+    /**
+     * @return array<int, array{id: int, text: string}>
+     */
+    public static function getData(): array
     {
         $pdo = self::getConnection();
 
-        try {
-            $rows = $pdo->query('SELECT id, text FROM db_table')->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $pdo->exec(
-                'CREATE TABLE IF NOT EXISTS db_table (
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                    text VARCHAR(100) NOT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
-            );
-
-            $stmt = $pdo->prepare('INSERT INTO db_table (text) VALUES (:text)');
-            $defaultData = ['Le Boss Mamad', 'Je suis beau', 'Heheh', '123456789'];
-
-            foreach ($defaultData as $text) {
-                $stmt->execute([':text' => $text]);
-            }
-
-            $rows = $pdo->query('SELECT id, text FROM db_table')->fetchAll(PDO::FETCH_ASSOC);
-        }
+        /** @var array<int, array{id: int, text: string}> $rows */
+        $rows = $pdo->query('SELECT id, text FROM db_table')->fetchAll(PDO::FETCH_ASSOC);
 
         return $rows;
     }

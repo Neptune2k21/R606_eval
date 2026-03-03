@@ -3,6 +3,9 @@ parameters:
     paths:
         - index.php
         - config.php
-        - src/
+        - src/Database.php
     scanDirectories:
         - src/
+        - migrations/
+    excludePaths:
+        - src/templates/
