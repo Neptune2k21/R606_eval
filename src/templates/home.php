@@ -1,11 +1,15 @@
-<?php ?>
+<?php
+/**
+ * @var array<int, array{id: int, text: string}> $rows
+ */
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>R6.06 Maintenance applicative</title>
-    <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
     <header>
