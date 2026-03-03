@@ -1,0 +1,17 @@
+{
+    "name": "neptune/r606_eval",
+    "description": "Evaluation R606",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Neptune\\R606Eval\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Neptune2k21",
+            "email": "mamadou_cisse01@etu.ube.fr"
+        }
+    ],
+    "require": {}
+}
