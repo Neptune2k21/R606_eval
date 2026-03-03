@@ -2,31 +2,41 @@ name: CI
 
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ develop, master ]
+    branches: [ "main", "develop" ]
+
+permissions:
+  contents: read
 
 jobs:
-  test:
+  build:
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@2.31.1
-        with:
-          php-version: '8.2'
-          extensions: pdo_sqlite
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql
 
-      - name: Install Dependances
-        run: composer install --no-progress --prefer-dist
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
 
-      - name: Lint
-        run: composer cs-check
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
 
-      - name: PHPStan
-        run: composer phpstan
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse --no-progress
 
-      - name: Tests
-        run: composer test
+    - name: Run test suite
+      run: ./vendor/bin/phpunit tests
